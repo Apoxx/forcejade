@@ -4,6 +4,7 @@ author: Apox <xzzy159@gmail.com>
 description: A Jade render class for dart-forcemvc.
 
 dependencies:
+  forcemvc: '>= 0.1.11 <0.2.0'
+  isolate_pool: '>= 0.0.4 <0.1.0'
   jaded:
     git: https://github.com/dartist/jaded.git
-  forcemvc: '>= 0.1.11 <0.2.0'
