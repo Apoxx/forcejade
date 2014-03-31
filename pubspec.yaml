@@ -1,0 +1,8 @@
+name: forcejade
+version: 0.0.1
+author: Apox <xzzy159@gmail.com>
+description: A Jade render class for dart-forcemvc.
+
+dependencies:
+  jaded: '>=0.1.8 <0.2.0'
+  forcemvc: '>= 0.1.11 <0.2.0'
