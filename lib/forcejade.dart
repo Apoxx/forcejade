@@ -33,7 +33,7 @@ class JadeRender extends ForceViewRender{
     if(devMode)
       runIsolate().then(rend);
     else
-      rend();
+      rend(null);
     return comp.future;
   }
 
