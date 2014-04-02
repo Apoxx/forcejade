@@ -17,8 +17,8 @@ class JadeRender extends ForceViewRender{
 
   JadeRender({this.viewDir :"../views", this.devMode : false}) : super(){
     idCpt = 0;
-    proxy = null;
     completers = new Map<int,Completer>();
+    proxy = new IsolatePool();
     runIsolate();
   }
 
@@ -40,14 +40,11 @@ class JadeRender extends ForceViewRender{
   Future runIsolate() {
     Completer comp = new Completer();
     compile(viewDir : this.viewDir);
-    if(proxy != null){
-      completers.forEach((k,v) => completers[k].complete(""));
-      completers.clear();
-      proxy.close();
+    if(child != null){
+      child.send({"CMD": "STOP"});
       child.close();
-      proxy = null;
+      child = null;
     }
-    proxy = new IsolatePool();
     proxy.runIsolate(new Uri.file("$viewDir/jaded.views.dart"),[]).then((IsolateWorker child){
       this.child = child;
       child.stream.listen((IsolateMessage data){
@@ -61,7 +58,7 @@ class JadeRender extends ForceViewRender{
 
   static void compile({String viewDir : "../views"}){
     var jadeTemplates = jade.renderDirectory(viewDir);
-    jadeTemplates = jadeTemplates.replaceFirst("\n",'\nimport "dart:isolate";\nimport "package:isolate_pool/isolate_pool.dart";\n');
+    jadeTemplates = jadeTemplates.replaceFirst("\n",'import "dart:isolate";\nimport "package:isolate_pool/isolate_pool.dart";\n');
     var isolateWrapper =
     """
   $jadeTemplates
@@ -70,7 +67,13 @@ class JadeRender extends ForceViewRender{
     var mirror = new IsolateWorker.isolateInit(replyTo);
     mirror.stream.listen((IsolateMessage msg){
       var value = msg.message;
-      msg.source.send({"idCpt" : value["idCpt"],"html" : JADE_TEMPLATES[value["filePath"]](value["model"])});
+      if(value["CMD"] != null){
+          if(value["CMD"] == "STOP"){
+            mirror.close();
+          }
+      }else{
+        msg.source.send({"idCpt" : value["idCpt"],"html" : JADE_TEMPLATES[value["filePath"]](value["model"])});
+      }
     });
   }
   """;
