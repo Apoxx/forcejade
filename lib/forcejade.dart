@@ -44,6 +44,7 @@ class JadeRender extends ForceViewRender{
       completers.forEach((k,v) => completers[k].complete(""));
       completers.clear();
       proxy.close();
+      child.close();
       proxy = null;
     }
     proxy = new IsolatePool();
@@ -60,7 +61,7 @@ class JadeRender extends ForceViewRender{
 
   static void compile({String viewDir : "../views"}){
     var jadeTemplates = jade.renderDirectory(viewDir);
-    jadeTemplates = jadeTemplates.replaceFirst("\n",'\nimport "package:isolate_pool/isolate_pool.dart";\n');
+    jadeTemplates = jadeTemplates.replaceFirst("\n",'\nimport "dart:isolate";\nimport "package:isolate_pool/isolate_pool.dart";\n');
     var isolateWrapper =
     """
   $jadeTemplates
