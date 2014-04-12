@@ -7,6 +7,15 @@ A Jade Template Engine plugin for [ForceMVC] using [Jaded].
 [ForceMVC]: http://pub.dartlang.org/packages/forcemvc
 [Jaded]: https://github.com/dartist/jaded
 
+Force Jade is not on pub, so if you want to try it, you must add this git to the dependencies, like that:
+
+    dependencies:
+      forcemvc: any
+      forcejade:
+        git: https://github.com/Apoxx/forcejade.git
+
+
+
 Usage example:
 
     import "package:forcemvc/force_mvc.dart";
