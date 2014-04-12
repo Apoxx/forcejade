@@ -30,3 +30,7 @@ You can set the devMode attribute to true when you call the JadeRender construct
 That way, you avoid the need to restart the server each time you make a modification in the jade files at cost of slower requests.
 
     server.viewRender = new JadeRender(devMode: true);
+
+You have to explicitly specify the package-root when you start your server to avoid path bugs:
+
+    dart --package-root=packages/ server.dart
